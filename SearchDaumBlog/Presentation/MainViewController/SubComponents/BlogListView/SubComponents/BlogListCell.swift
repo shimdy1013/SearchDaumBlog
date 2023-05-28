@@ -44,7 +44,7 @@ class BlogListCell: UITableViewCell {
         }
         
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(nameLabel.snp.bottom).inset(8)
+            $0.top.equalTo(nameLabel.snp.bottom).inset(-8)
             $0.leading.equalTo(nameLabel)
             $0.trailing.equalTo(thumbnailImageView.snp.leading).offset(-8)
         }

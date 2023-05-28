@@ -32,12 +32,10 @@ class SearchBar: UISearchBar {
     }
     
     private func bind() {
-        // searchbar search button tapped
-        // custom button tapped
         Observable
             .merge(
-                self.rx.searchButtonClicked.asObservable(),
-                searchButton.rx.tap.asObservable()
+                self.rx.searchButtonClicked.asObservable(), // searchbar search button tapped
+                searchButton.rx.tap.asObservable()          // custom button tapped
             )
             .bind(to: searchButtonTapped)
             .disposed(by: disposeBag)
