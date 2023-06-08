@@ -32,11 +32,11 @@ class MainViewController: UIViewController {
     private func bind() {
         let blogResult = searchBar.shouldLoadResult
             .flatMapLatest { query in
-                SearchBlogNetwork().searchBlog(query: query)
+                SearchBlogNetwork().searchBlog(query: query) // Single<Result<DaumKakaoBlog, SearchNetworkError>>
             }
             .share()
             
-        let blogValue = blogResult
+        let blogValue = blogResult  // Observable<DaumKakaoBlog>
             .compactMap { data -> DaumKakaoBlog? in
                 guard case .success(let value) = data else {
                     return nil

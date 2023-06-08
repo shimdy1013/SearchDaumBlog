@@ -37,7 +37,7 @@ class BlogListView: UITableView {
     // cellForRowAt
     private func bind() {
         cellData
-            .asDriver(onErrorJustReturn: [])
+            .asDriver(onErrorJustReturn: [])    // 에러 시 빈 배열 반환
             .drive(self.rx.items) { tv, row, data in
                 let index = IndexPath(row: row, section: 0)
                 let cell = tv.dequeueReusableCell(withIdentifier: "BlogListCell", for: index) as! BlogListCell

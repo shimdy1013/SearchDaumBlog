@@ -37,22 +37,22 @@ class SearchBar: UISearchBar {
                 self.rx.searchButtonClicked.asObservable(), // searchbar search button tapped
                 searchButton.rx.tap.asObservable()          // custom button tapped
             )
-            .bind(to: searchButtonTapped)
+            .bind(to: searchButtonTapped)   // to : PublishRelay
             .disposed(by: disposeBag)
 
         searchButtonTapped
             .asSignal()
-            .emit(to: self.rx.endEditing)
+            .emit(to: self.rx.endEditing)   // to : Observer
             .disposed(by: disposeBag)
         
         self.shouldLoadResult = searchButtonTapped
             .withLatestFrom(self.rx.text) {
-                $1 ?? ""
+                $1 ?? ""    // text가 nil일 때 빈 값 반환
             }
             .filter {
-                !$0.isEmpty
+                !$0.isEmpty     // 빈 값일 때 거름
             }
-            .distinctUntilChanged()
+            .distinctUntilChanged()     // 중복값 제외
     }
     
     private func attribute() {

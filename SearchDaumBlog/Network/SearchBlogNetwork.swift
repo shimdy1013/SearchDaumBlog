@@ -36,6 +36,7 @@ class SearchBlogNetwork {
         request.setValue("KakaoAK 820e80014bffc814b1c6d5e49baa517d", forHTTPHeaderField: "Authorization")
         
         return session.rx.data(request: request as URLRequest)    // request에 대한 응답 -> Observable<Data>
+            .asSingle()
             .map { data in
                 do {
                     let blogData = try JSONDecoder().decode(DaumKakaoBlog.self, from: data)
@@ -47,6 +48,5 @@ class SearchBlogNetwork {
             .catch { _ in
                 .just(.failure(.networkError))
             }
-            .asSingle()
     }
 }
