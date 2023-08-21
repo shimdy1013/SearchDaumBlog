@@ -14,15 +14,10 @@ class SearchBar: UISearchBar {
     let disposeBag = DisposeBag()
     let searchButton = UIButton()
     
-    // SearchBar 버튼 탭 이벤트
-    let searchButtonTapped = PublishRelay<Void>()
-    
-    var shouldLoadResult = Observable<String>.of("")
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        bind()
+        // bind()
         attribute()
         layout()
     }
@@ -31,28 +26,25 @@ class SearchBar: UISearchBar {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func bind() {
+    func bind(_ viewModel: SearchBarViewModel) {
+        self.rx.text
+            .bind(to: viewModel.queryText)
+            .disposed(by: disposeBag)
+        
         Observable
             .merge(
                 self.rx.searchButtonClicked.asObservable(), // searchbar search button tapped
                 searchButton.rx.tap.asObservable()          // custom button tapped
             )
-            .bind(to: searchButtonTapped)   // to : PublishRelay
+            .bind(to: viewModel.searchButtonTapped)   // to : PublishRelay
             .disposed(by: disposeBag)
 
-        searchButtonTapped
+        viewModel.searchButtonTapped
             .asSignal()
             .emit(to: self.rx.endEditing)   // to : Observer
             .disposed(by: disposeBag)
         
-        self.shouldLoadResult = searchButtonTapped
-            .withLatestFrom(self.rx.text) {
-                $1 ?? ""    // text가 nil일 때 빈 값 반환
-            }
-            .filter {
-                !$0.isEmpty     // 빈 값일 때 거름
-            }
-            .distinctUntilChanged()     // 중복값 제외
+
     }
     
     private func attribute() {
